@@ -1,11 +1,11 @@
 diff --git a/file_entity.module b/file_entity.module
-index 60ca677..4930d93 100644
+index dc54eff..da95803 100644
 --- a/file_entity.module
 +++ b/file_entity.module
 @@ -1125,8 +1125,8 @@ function file_entity_file_formatter_file_image_view($file, $display, $langcode)
          '#path' => $file->uri,
-         '#width' => $file->image_dimensions['width'],
-         '#height' => $file->image_dimensions['height'],
+         '#width' => isset($file->override['attributes']['width']) ? $file->override['attributes']['width'] : $file->image_dimensions['width'],
+         '#height' => isset($file->override['attributes']['height']) ? $file->override['attributes']['height'] : $file->image_dimensions['height'],
 -        '#alt' => token_replace($display['settings']['alt'], array('file' => $file), $replace_options),
 -        '#title' => token_replace($display['settings']['title'], array('file' => $file), $replace_options),
 +        '#alt' => decode_entities(token_replace($display['settings']['alt'], array('file' => $file), $replace_options)),
@@ -15,8 +15,8 @@ index 60ca677..4930d93 100644
      else {
 @@ -1135,8 +1135,8 @@ function file_entity_file_formatter_file_image_view($file, $display, $langcode)
          '#path' => $file->uri,
-         '#width' => $file->image_dimensions['width'],
-         '#height' => $file->image_dimensions['height'],
+         '#width' => isset($file->override['attributes']['width']) ? $file->override['attributes']['width'] : $file->image_dimensions['width'],
+         '#height' => isset($file->override['attributes']['height']) ? $file->override['attributes']['height'] : $file->image_dimensions['height'],
 -        '#alt' => token_replace($display['settings']['alt'], array('file' => $file), $replace_options),
 -        '#title' => token_replace($display['settings']['title'], array('file' => $file), $replace_options),
 +        '#alt' => decode_entities(token_replace($display['settings']['alt'], array('file' => $file), $replace_options)),
@@ -24,3 +24,23 @@ index 60ca677..4930d93 100644
        );
      }
      return $element;
+diff --git a/file_entity.views.inc b/file_entity.views.inc
+index b1a556a..f75deae 100644
+--- a/file_entity.views.inc
++++ b/file_entity.views.inc
+@@ -80,6 +80,15 @@ function file_entity_views_data() {
+     ),
+   );
+ 
++  // File schema type.
++  $data['file_managed']['schema_type'] = array(
++    'title' => t('Schema type'),
++    'help' => t('Filter files by schema, such as public or private.'),
++    'filter' => array(
++      'handler' => 'views_handler_filter_schema_type',
++    ),
++  );
++
+   // Download link.
+   $data['file_managed']['download'] = array(
+     'title' => t('Download link'),
