@@ -1,0 +1,26 @@
+diff --git a/file_entity.module b/file_entity.module
+index 60ca677..4930d93 100644
+--- a/file_entity.module
++++ b/file_entity.module
+@@ -1125,8 +1125,8 @@ function file_entity_file_formatter_file_image_view($file, $display, $langcode)
+         '#path' => $file->uri,
+         '#width' => $file->image_dimensions['width'],
+         '#height' => $file->image_dimensions['height'],
+-        '#alt' => token_replace($display['settings']['alt'], array('file' => $file), $replace_options),
+-        '#title' => token_replace($display['settings']['title'], array('file' => $file), $replace_options),
++        '#alt' => decode_entities(token_replace($display['settings']['alt'], array('file' => $file), $replace_options)),
++        '#title' => decode_entities(token_replace($display['settings']['title'], array('file' => $file), $replace_options)),
+       );
+     }
+     else {
+@@ -1135,8 +1135,8 @@ function file_entity_file_formatter_file_image_view($file, $display, $langcode)
+         '#path' => $file->uri,
+         '#width' => $file->image_dimensions['width'],
+         '#height' => $file->image_dimensions['height'],
+-        '#alt' => token_replace($display['settings']['alt'], array('file' => $file), $replace_options),
+-        '#title' => token_replace($display['settings']['title'], array('file' => $file), $replace_options),
++        '#alt' => decode_entities(token_replace($display['settings']['alt'], array('file' => $file), $replace_options)),
++        '#title' => decode_entities(token_replace($display['settings']['title'], array('file' => $file), $replace_options)),
+       );
+     }
+     return $element;
