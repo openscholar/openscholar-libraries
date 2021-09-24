@@ -1,0 +1,35 @@
+diff --git a/plugins/providers/default.inc b/plugins/providers/default.inc
+index 6454792..0e586ec 100644
+--- a/plugins/providers/default.inc
++++ b/plugins/providers/default.inc
+@@ -93,6 +93,30 @@ function oembed_default_callback($plugin, $url, $matches, $parameters) {
+     }
+   }
+ 
++  $iframe_html = $embed['html'];
++  // Get iframe source URL.
++  preg_match('/src="([^"]+)"/', $iframe_html, $iframe_srcs);
++
++  // Override iframe html only when source is available.
++  if ($iframe_srcs[1]) {
++    // Get individual iframe attributes.
++    preg_match('/class="([^"]+)"/', $iframe_html, $class);
++    preg_match('/scrolling="([^"]+)"/', $iframe_html, $scrolling);
++    preg_match('/frameborder="([^"]+)"/', $iframe_html, $frameborder);
++    preg_match('/allow="([^"]+)"/', $iframe_html, $allow);
++    preg_match('/allowfullscreen="([^"]+)"/', $iframe_html, $allowfullscreen);
++
++    $class = $class[1] ?? 'youtube-video';
++    $scrolling = $scrolling[1] ?? 'no';
++    $allowfullscreen = $allowfullscreen[1] ?? true;
++
++    // Apostrophe is breaking title attribute.
++    $title = str_replace("'", "", $embed['title']);
++
++    // Re-generate iframe html.
++    $embed['html'] = "<iframe class='{$class}' src='{$iframe_srcs[1]}' width='{$embed['width']}' height='{$embed['height']}' scrolling='{$scrolling}' title='{$title}' frameborder='{$frameborder[1]}' allow='{$allow[1]}' allowfullscreen='{$allowfullscreen}'></iframe>";
++  }
++
+   if (!is_array($embed) || empty($embed['version']) || empty($embed['type']) || intval($embed['version']) != 1) {
+     watchdog('oembed', 'Response from %url not a valid oEmbed response.', array('%url' => $fetch_url), WATCHDOG_ERROR);
+     throw new RuntimeException(t('Response from %url not a valid oEmbed response.', array('%url' => $fetch_url)), WATCHDOG_ERROR);
