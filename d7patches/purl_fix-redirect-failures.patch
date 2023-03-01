@@ -1,0 +1,13 @@
+diff --git a/purl.module b/purl.module
+index 527d8e7..3c092f2 100644
+--- a/purl.module
++++ b/purl.module
+@@ -597,7 +597,7 @@ function purl_delete($modifier) {
+     ':provider' => $modifier['provider'],
+     ':param' => $where
+   ))->fetchField();
+-  if ($check) {
++  if ($check && FALSE) {
+     //TODO change this to the new db_delete() method
+     $status = db_query("DELETE FROM {purl} WHERE provider = :provider AND $param = :param", array(':provider' => $modifier['provider'], ':param' => $where));
+     purl_load(NULL, TRUE);
