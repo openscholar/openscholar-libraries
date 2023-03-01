@@ -1,0 +1,12 @@
+diff --git a/spaces_og/spaces_og.module b/spaces_og/spaces_og.module
+index b0f3265..e5111eb 100644
+--- a/spaces_og/spaces_og.module
++++ b/spaces_og/spaces_og.module
+@@ -293,7 +293,6 @@ function spaces_og_node_update($node, $op = 'update') {
+ function spaces_og_node_delete($node) {
+   if (og_is_group_type('node', $node->type)) {
+     spaces_delete('og', $node->nid);
+-    purl_delete(array('provider' => 'spaces_og', 'id' => $node->nid));
+   }
+ }
+ 
