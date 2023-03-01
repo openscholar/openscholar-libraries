@@ -1,8 +1,8 @@
 diff --git a/redirect.module b/redirect.module
-index 9f7a256..362cd01 100644
+index 9f7a256..38d2e46 100644
 --- a/redirect.module
 +++ b/redirect.module
-@@ -557,6 +557,7 @@ function redirect_load_by_hash($hash, $reset = FALSE) {
+@@ -557,18 +557,20 @@ function redirect_load_by_hash($hash, $reset = FALSE) {
   * @ingroup redirect_api
   */
  function redirect_load_by_source($source, $language = LANGUAGE_NONE, array $query = array()) {
@@ -10,3 +10,19 @@ index 9f7a256..362cd01 100644
    // Run a case-insensitive query for matching RIDs first.
    $rid_query = db_select('redirect');
    $rid_query->addField('redirect', 'rid');
++  $source_condition = db_or();
++  $source_condition->condition('source', db_like($source), 'LIKE');
+   if ($source != variable_get('site_frontpage', 'node')) {
+-    $rid_query->condition('source', db_like($source), 'LIKE');
++    $source_condition->condition('source', '*');
+   }
+   else {
+-    $source_condition = db_or();
+-    $source_condition->condition('source', db_like($source), 'LIKE');
+     $source_condition->condition('source', '');
+-    $rid_query->condition($source_condition);
++    $source_condition->condition('source', '*');
+   }
++  $rid_query->condition($source_condition);
+   $rid_query->condition('language', array($language, LANGUAGE_NONE));
+   $rids = $rid_query->execute()->fetchCol();
